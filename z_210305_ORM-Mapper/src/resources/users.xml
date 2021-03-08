@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <!-- DB에서 활용되는 SQL문을 모아 놓은 것 -->
+ 
+ <mapper namespace="user.dao.UserMapper">	<!-- 이 xml을 UserMapper라는 interface에 연결, 밑에 코드의 id를 함수화 하기위해 연결함 -->
+ 
+	<!-- DB에서 특정아이디를 검색했을때의 전체 데이터 출력문 -->
+	<select id="selectUserById" parameterType="String" resultType="User">
+		SELECT * FROM users WHERE userid=#{userid}
+	</select>
+	
+	<!-- DB전체 데이터 출력문 -->
+	<select id="selectUserList" resultType="User">
+		SELECT * FROM users ORDER BY userid
+	</select>
+	
+	<!-- DB 데이터 입력문 -->
+	<insert id="insertUser" parameterType="User">
+		INSERT INTO users values(#{userid},#{name},#{gender},#{city})
+	</insert>
+	
+	<!-- DB에서 특정아이디를 삭제하는 SQL -->
+	<delete id="deleteUser" parameterType="String">
+		DELETE FROM users WHERE userid=#{userid}
+	</delete>
+	
+	<!-- DB에서 특정아이디의 데이터를 수정하는 SQL -->
+	<update id="updateUser" parameterType="User">
+		UPDATE users SET name=#{name}, gender=#{gender}, city=#{city} WHERE userid=#{userid}
+	</update>
+</mapper>
