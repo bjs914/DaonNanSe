@@ -1,0 +1,1 @@
+<%response.sendRedirect("/SPTest11/calc");%>	
