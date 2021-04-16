@@ -1,7 +1,0 @@
-DROP TABLE customers IF EXISTS;
-CREATE TABLE customers (
-ID VARCHAR(25) PRIMARY KEY,
-NAME VARCHAR(50),
-address VARCHAR(250),
-noOfOrdersMade INT
-);
