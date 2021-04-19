@@ -40,5 +40,19 @@ public class MariaCustomerRepository implements CustomerRepository{
 			return customer;
 		}
 	}
+
+	@Override
+	public void addCustomer(Customer customer) {//고객추가를 위한 구현메소드
+		String SQL = "INSERT INTO CUSTOMERS (ID,"
+				+ "NAME, ADDRESS, noOfOrdersMade)"
+				+ "VALUES (:id, :name, :address, :noOfOrdersMade)";
+		Map<String,Object> params=new HashMap<String, Object>();
+		params.put("id", customer.getCustomerId());
+		params.put("name", customer.getName());
+		params.put("address", customer.getAddress());
+		params.put("noOfOrdersMade", customer.getNoOfOrdersMade());
+		
+		jdbcTemplate.update(SQL, params);
+	}
 	
 }

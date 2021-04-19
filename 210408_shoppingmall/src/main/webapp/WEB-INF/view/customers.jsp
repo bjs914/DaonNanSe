@@ -20,25 +20,29 @@
 		</div>
 	</section>
 	<section class="container">
-		<a href="/shoppingmall">홈으로</a>
+		<a href="/210408_shoppingmall">홈으로</a>
 		<hr>
 	</section>
 	<section class="container">
 		<div class="row">
 			<c:forEach items="${customers}" var="customer">	
 			<!-- model에 저장되어있는 customers의 이름으로 값을 불러오는 의미 -->
-				<div class="col-sm-6 col-md-3">
-					<div class="thumbnail">
-						<div class="caption">
-							<h3>${customer.name}</h3>
-							<h3>${customer.address}</h3>
-							<h3>${customer.customerId}</h3>
-							<p>주문건수 : ${customer.noOfOrdersMade}</p>
-						</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="thumbnail">
+					<div class="caption">													
+						<spring:message code="customers.form.cust.name"/>
+						<h3>${customer.name}</h3>
+						<spring:message code="customers.form.cust.address"/>
+						<h3>${customer.address}</h3>
+						<spring:message code="customers.form.cust.custId"/>
+						<h3>${customer.customerId}</h3>
+						<spring:message code="customers.form.cust.noOfOrdersMade.p"/>
+						 : ${customer.noOfOrdersMade}
 					</div>
 				</div>
-			</c:forEach>
-		</div>
-	</section>
+			</div>
+		</c:forEach>
+	</div>
+</section>
 </body>
 </html>

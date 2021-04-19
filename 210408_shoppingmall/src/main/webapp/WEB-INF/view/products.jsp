@@ -21,7 +21,7 @@
 	</section>
 
 	<section class="container">
-		<a href="/shoppingmall">홈으로</a>
+		<a href="/210408_shoppingmall">홈으로</a>
 		<hr>
 	</section>
 
@@ -33,8 +33,8 @@
 						<div class="caption">
 							<h3>${product.name}</h3>
 							<p>${product.description}</p>
-							<p>₩${product.unitPriceStr}</p>
-							<p>제고 수량 : ${product.unitsInStockStr}</p>
+							<p>₩${product.unitPrice}</p>
+							<p>재고 수량 : ${product.unitsInStockStr}</p>
 						</div>
 					</div>
 				</div>

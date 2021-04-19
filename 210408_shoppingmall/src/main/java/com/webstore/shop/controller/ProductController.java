@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.MatrixVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,10 +76,18 @@ public class ProductController {
 	public String processAddNewProductForm(@ModelAttribute("newProduct") Product newProduct, BindingResult result) {
 		String[] suppressedFields = result.getSuppressedFields();
 		if (suppressedFields.length > 0) {
-			throw new RuntimeException("Attempting to bind disallowed fields: "
+			throw new RuntimeException("허용되지 않은 항목을 엮어오려고 함: "
 					+ StringUtils.arrayToCommaDelimitedString(suppressedFields));
 		}
 		productService.addProduct(newProduct);
 		return "redirect:/market/products";
+	}
+	
+	@InitBinder
+	//setAllowedFields에 해당되는 데이터만 바인딩(=묶음)하는 것, 
+	//즉 프로그래머가 지정하지 않는 필드의 데이터를 검증을 통해 입력되지 않도록 맞춤제작 하는 것과 의미가 유사함
+	public void initialiseBinder(WebDataBinder binder) {
+		binder.setAllowedFields("productId", "name", "unit*", "description", "manufacturer", "category", "condition",
+				"productImage", "productManual", "unitsInOrder", "discontinued");				
 	}
 }

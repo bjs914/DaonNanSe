@@ -1,6 +1,7 @@
 package com.webstore.shop.serviceimpl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,10 @@ public class ProductServiceImpl implements ProductService{
 	@Autowired
 	private ProductRepository productRepository;
 	
-	@Override
 	public List<Product> getAllProducts() {
 		return productRepository.getAllProducts();
 	}
 
-	@Override
 	public void updateAllStock() {
 		List<Product> allProducts = productRepository.getAllProducts();
 		
@@ -32,9 +31,23 @@ public class ProductServiceImpl implements ProductService{
 		}
 	}
 
-	@Override
 	public List<Product> getProductsByCategory(String category) {	
 		return productRepository.getProductByCategory(category);
+	}
+
+	//Matrix 활용 구현체
+	public List<Product> getProductsByFilter(Map<String, List<String>> filterParams) {
+		return productRepository.getProductsByFilter(filterParams);
+	}
+
+	//상품 상세페이지 구현체
+	public Product getProductById(String productID) {
+		return productRepository.getProductById(productID);
+	}
+
+	//제품 추가페이지 구현체
+	public void addProduct(Product product) {
+		productRepository.addProduct(product);		
 	}
 
 }
