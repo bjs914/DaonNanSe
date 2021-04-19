@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- Processes application requests -->
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!-- 여기 추가됨 -->
+		<init-param>
+			<param-name>contextClass</param-name>
+			<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+		</init-param>
+		<!-- 추가종료 -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>	<!-- 여기 변경됨,기존에 spring되어 있는것을 사용하지 않고, config클래스를 사용하기 위함 -->
+			config.MvcConfig	<!-- 나중에 만들것들 추가해주면됨 -->
+			config.ControllerConfig
+			</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>	<!-- 위 servlet의 이름을 mapping하기 위해 이름을 동일하게 지정 -->
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+</web-app>

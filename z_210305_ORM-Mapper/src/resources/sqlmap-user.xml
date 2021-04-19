@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!-- VO 클래스를 하나의 구성품으로 사용하기 위한 xml, 새로운 호출명을 지정함 -->
+<configuration>
+<typeAliases>
+		<!-- userVO를 User로 새로운 호출명(alias=별명이라는 뜻)으로 지정 -->
+		<typeAlias type="user.vo.UserVO" alias="User" />
+	</typeAliases>
+</configuration>
