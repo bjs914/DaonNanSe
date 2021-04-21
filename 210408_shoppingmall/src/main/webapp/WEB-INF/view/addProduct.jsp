@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>    
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,7 +33,7 @@
 	</section>
 	<section class="container">
 		<form:form method="POST" modelAttribute="newProduct"
-			class="form-horizontal">
+			class="form-horizontal" enctype="multipart/form-data">	<!-- enctype 이미지추가 관련 -->
 			<fieldset>
 				<legend>신상품 정보 입력</legend>
 				<div class="form-group">
@@ -160,8 +160,25 @@
 						<!-- checkbok 내용도 spring:message 활용 -->
 						<spring:message code="addProduct.form.condition.option3"/>
 						<form:radiobutton path="condition" value="Refurbished" />
-						
 					</div>
+				</div>
+				<div class="form-group"><!-- 제품 이미지 삽입관련 태그 -->
+					<label class="control-label col-lg-2" for="productImage">
+						<spring:message code="addProduct.form.productImage.label" />
+					</label>
+					<div class="col-lg-10">
+						<form:input id="productImage" path="productImage" type="file" 
+							class="form:input-large"/>
+					</div>
+				</div>
+				<div class="form-group"><!-- 제품 메뉴얼 삽입관련 태그 -->
+					<label class="control-label col-lg-2" for="productManual">
+						<spring:message code="addProduct.form.productManual.label" />
+					</label>
+					<div class="col-lg-10">
+						<form:input id="productManual" path="productManual"
+							type="file" class="form:input-large" />
+					</div>							
 				</div>
 				<div class="form-group">
 					<div class="col-lg-offset-2 col-lg-10">

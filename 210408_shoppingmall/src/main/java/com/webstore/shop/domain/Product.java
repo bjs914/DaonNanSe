@@ -3,10 +3,11 @@ package com.webstore.shop.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.webstore.shop.utiil.ValueFormat;
 
 public class Product implements Serializable{	//상품정보에 대한 Class
-
 	/**
 	 * 
 	 */
@@ -23,6 +24,8 @@ public class Product implements Serializable{	//상품정보에 대한 Class
 	private long unitsInOrder;	//주문관련
 	private boolean discontinued;
 	private String condition;	//상태정보
+	private MultipartFile productImage;	//이미지 파일 삽입 관련
+	private MultipartFile productManual;//제품 메뉴얼 삽입 관련
 	
 	public Product() {
 		super();	//디폴트 생성자
@@ -131,6 +134,22 @@ public class Product implements Serializable{	//상품정보에 대한 Class
 
 	public void setCondition(String condition) {
 		this.condition = condition;
+	}
+	
+	public MultipartFile getProductImage() {
+		return productImage;
+	}
+
+	public void setProductImage(MultipartFile productImage) {
+		this.productImage = productImage;
+	}
+
+	public MultipartFile getProductManual() {
+		return productManual;
+	}
+
+	public void setProductManual(MultipartFile productManual) {
+		this.productManual = productManual;
 	}
 
 	@Override

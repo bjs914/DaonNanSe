@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
@@ -54,6 +54,21 @@ public class WebApplicationContextConfig extends WebMvcConfigurerAdapter{
 	public LocaleResolver localeResolver() {
 		SessionLocaleResolver resolver = new SessionLocaleResolver();
 		resolver.setDefaultLocale(new Locale("ko"));//기본으로 지정할 언어
+		return resolver;
+	}
+	
+	@Override	//사진 파일을 등록하기 위한 빈
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		//이미지 불러오기와 관련
+		registry.addResourceHandler("/img/**").addResourceLocations("/resources/images/");
+		//파일 불러오기와 관련됨(pdf형식)
+		registry.addResourceHandler("/pdf/**").addResourceLocations("/resources/pdf/");	
+	}
+	
+	@Bean	//파일찾기 및 images 디렉토리에 저장하기 위한 빈
+	public CommonsMultipartResolver multipartResolver() {
+		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+		resolver.setDefaultEncoding("utf-8");
 		return resolver;
 	}
 }

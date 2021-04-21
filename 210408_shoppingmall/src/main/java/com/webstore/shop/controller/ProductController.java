@@ -1,9 +1,13 @@
 package com.webstore.shop.controller;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.webstore.shop.domain.Product;
 import com.webstore.shop.service.ProductService;
@@ -73,11 +78,43 @@ public class ProductController {
 	
 	//제품 추가를 위한 컨트롤러(POST방식)
 	@RequestMapping(value = "/products/add", method = RequestMethod.POST)
-	public String processAddNewProductForm(@ModelAttribute("newProduct") Product newProduct, BindingResult result) {
+	public String processAddNewProductFrom(
+			@ModelAttribute("newProduct") Product newProduct,
+			BindingResult result, HttpServletRequest request) {
+		
+		if (result.hasErrors()) {
+			return "addProduct";
+		}
+		
 		String[] suppressedFields = result.getSuppressedFields();
 		if (suppressedFields.length > 0) {
-			throw new RuntimeException("허용되지 않은 항목을 엮어오려고 함: "
+			throw new RuntimeException(
+					"허용되지 않은 영역을 가져오려고 함 : "
 					+ StringUtils.arrayToCommaDelimitedString(suppressedFields));
+		}
+		// 상품 이미지 메모리 내용을 정한 폴더에 파일로 보관		
+		MultipartFile productImage = newProduct.getProductImage();
+		String rootDirectory = 
+				request.getSession().getServletContext().getRealPath("/");
+		if (productImage != null && !productImage.isEmpty()) {
+			try {
+				productImage.transferTo(new File(rootDirectory 
+						+ "resources\\images\\" + newProduct.getProductId() 
+						+ ".png"));
+			} catch (Exception e) {
+				throw new RuntimeException("상품 이미지 저장에 실패했습니다", e);
+			}
+		}
+		//상품 메뉴얼 pdf 파일 정한 폴더에 파일로 보관
+		MultipartFile pdfManual = newProduct.getProductManual();
+		if (pdfManual != null && !pdfManual.isEmpty()) {
+			try {
+				pdfManual.transferTo(new File(rootDirectory 
+						+ "resources\\pdf\\" + newProduct.getProductId() 
+						+ ".pdf"));
+			} catch (Exception e) {
+				throw new RuntimeException("상품 메뉴얼 저장에 실패했습니다.", e);
+			}
 		}
 		productService.addProduct(newProduct);
 		return "redirect:/market/products";
@@ -88,6 +125,6 @@ public class ProductController {
 	//즉 프로그래머가 지정하지 않는 필드의 데이터를 검증을 통해 입력되지 않도록 맞춤제작 하는 것과 의미가 유사함
 	public void initialiseBinder(WebDataBinder binder) {
 		binder.setAllowedFields("productId", "name", "unit*", "description", "manufacturer", "category", "condition",
-				"productImage", "productManual", "unitsInOrder", "discontinued");				
+				"productImage", "productManual", "unitsInOrder", "discontinued","productImage","productManual");				
 	}
 }
