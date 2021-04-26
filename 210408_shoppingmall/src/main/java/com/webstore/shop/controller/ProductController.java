@@ -70,9 +70,9 @@ public class ProductController {
 	
 	//제품 추가를 위한 컨트롤러(GET방식)
 	@RequestMapping(value = "/products/add", method = RequestMethod.GET)
-	public String getAddNewProductForm(Model model) {
-		Product newProduct = new Product();
-		model.addAttribute("newProduct", newProduct);
+	public String getAddNewProductForm(@ModelAttribute("newProduct") Product newProduct) {
+		//@ModelAttribute : newProduct라는 객체명으로 Product (VO)클래스를 하나의 빈으로 만든다
+		
 		return "addProduct";
 	}
 	
