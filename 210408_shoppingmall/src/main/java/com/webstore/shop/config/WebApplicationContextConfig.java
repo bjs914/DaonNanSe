@@ -1,5 +1,6 @@
 package com.webstore.shop.config;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import org.springframework.context.MessageSource;
@@ -7,15 +8,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+import org.springframework.web.servlet.view.xml.MarshallingView;
+
+import com.webstore.shop.domain.Product;
 
 //web.xml의 역할을 하는 클래스
 //Spring MVC를 자동으로 구성하여 사용하기 위한 어노테이션
@@ -71,4 +81,33 @@ public class WebApplicationContextConfig extends WebMvcConfigurerAdapter{
 		resolver.setDefaultEncoding("utf-8");
 		return resolver;
 	}
+	
+	@Bean	//상품정보를 JSON 형태로 표현하기 위한 빈 추가
+	public MappingJackson2JsonView jsonView() {
+		MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+		jsonView.setPrettyPrint(true);
+		return jsonView;
+	}
+	
+	@Bean	//상품정보를 xml 형태로 표현하기 위한 빈 추가
+	public MarshallingView xmlView() {
+		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+		marshaller.setClassesToBeBound(Product.class);
+		MarshallingView xmlView = new MarshallingView(marshaller);
+		return xmlView;
+	}
+	
+	@Bean
+	public ViewResolver contentNegotiatingViewResolver(
+			ContentNegotiationManager manager) {
+		ContentNegotiatingViewResolver resolver = 
+				new ContentNegotiatingViewResolver();
+		resolver.setContentNegotiationManager(manager);
+		ArrayList<View> views = new ArrayList<View>();
+		views.add(jsonView());
+		views.add(xmlView());
+		resolver.setDefaultViews(views);
+		return resolver;
+	}
+	
 }
