@@ -24,6 +24,9 @@ initial-scale=1">
 	<ul>
 		<li><a href="market/product.xml?id=P1235">상품 XML 방식 요청</a>
 		<li><a href="market/product.json?id=P1235">상품 Json 방식 요청</a>
+		<li><a href="market/product?id=P10000">없는 상품 에러표시 보기</a>
+		<li><a href="market/products/specialOffer?promo=OFF3R">판촉코드-성공(목록표시)</a></li>
+		<li><a href="market/products/specialOffer?promo=OFFER">판촉코드-오류</a></li>
 		<li><a href="market/customers/">고객목록</a></li>
 		<li><a href="market/customers/add">고객 추가</a></li>
 		<li><a href="market/products/add">상품 추가</a></li>

@@ -7,18 +7,18 @@
 <head>
 <link rel="stylesheet"
 href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-<title>ID로 찾은 상품</title>
+<title><spring:message code="product.form.title" /></title>
 </head>
 <body>
 	<section>
 		<div class="jumbotron">
 			<div class="container">
-				<h1>상품 검색 결과</h1>
+				<h1><spring:message code="product.form.serach"/></h1>
 			</div>
 		</div>
 	</section>
 	<section class="container">
-		<a href="/210408_shoppingmall">홈으로</a>
+		<a href="/210408_shoppingmall"><spring:message code="home.label"/></a>
 		<hr>
 	</section>
 	<section class="container">

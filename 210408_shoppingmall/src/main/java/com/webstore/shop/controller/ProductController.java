@@ -7,12 +7,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.MatrixVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,8 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.webstore.shop.domain.Product;
+import com.webstore.shop.exception.NoProductsFoundUnderCategoryException;
+import com.webstore.shop.exception.ProductNotFoundException;
 import com.webstore.shop.service.ProductService;
 
 @Controller
@@ -48,10 +51,15 @@ public class ProductController {
 					//DB의 cateogory탭에서 확인하여 url경로에 넣어주게 된다.
 					//ReqeustMapping("/{변수명}")과 @PathValrable("변수명")이 꼭 같아야만 함
 	public String getProductsByCategory(Model model,
-			@PathVariable("category") String productCategory) {
+			@PathVariable String category) {
 	//@PathVariable : URL 경로에 변수를 넣어주는 것
-		model.addAttribute("products",
-				productService.getProductsByCategory(productCategory));
+		List<Product> products = 
+				productService.getProductsByCategory(category);
+		
+		if(products==null || products.isEmpty()) {
+			throw new NoProductsFoundUnderCategoryException();
+		}
+		model.addAttribute("products",products);
 		return "products";
 	}
 	
@@ -119,6 +127,25 @@ public class ProductController {
 		productService.addProduct(newProduct);
 		return "redirect:/market/products";
 	}
+	
+	//예외처리 메소드
+	//ModelAndView 객체를 생성하여 잘못된 제품ID, 발생한 예외, 요구한 URL 저장 및 반환 뷰 이름을 설정
+	@ExceptionHandler(ProductNotFoundException.class)
+	public ModelAndView handleError(HttpServletRequest req,
+				ProductNotFoundException exception) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("invalidProductId", exception.getProductId());
+		mav.addObject("exception", exception);
+		mav.addObject("url", req.getRequestURL()+"?"+req.getQueryString());
+		mav.setViewName("productNotFound");
+		return mav;
+	}
+
+	//프로모션 제품에 대한 메소드
+	@RequestMapping("/products/invalidPromoCode")
+	public String invalidPromoCode() {
+		return "invalidPromoCode";
+	}//잘못된 프로모션 제품 코드가 사용된 경우, 오류 페이지를 보여주기 위한 뷰 페이지 반환
 	
 	@InitBinder
 	//setAllowedFields에 해당되는 데이터만 바인딩(=묶음)하는 것, 

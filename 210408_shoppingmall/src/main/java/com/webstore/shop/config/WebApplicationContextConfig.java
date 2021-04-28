@@ -11,13 +11,16 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -26,6 +29,9 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import org.springframework.web.servlet.view.xml.MarshallingView;
 
 import com.webstore.shop.domain.Product;
+import com.webstore.shop.interceptor.ProcessingTimeLogInterceptor;
+import com.webstore.shop.interceptor.PromoCodeInterceptor;
+
 
 //web.xml의 역할을 하는 클래스
 //Spring MVC를 자동으로 구성하여 사용하기 위한 어노테이션
@@ -108,6 +114,31 @@ public class WebApplicationContextConfig extends WebMvcConfigurerAdapter{
 		views.add(xmlView());
 		resolver.setDefaultViews(views);
 		return resolver;
+	}
+	
+	@Override	//인터셉터를 위한 메소드, SpringMVC에 등록
+	public void addInterceptors(InterceptorRegistry registry) {
+			registry.addInterceptor(new ProcessingTimeLogInterceptor());
+			
+			//한글↔영어 변환을 위한 인터셉터 추가
+			LocaleChangeInterceptor localeChangeInterceptor =
+					new LocaleChangeInterceptor();
+			localeChangeInterceptor.setParamName("language");
+			registry.addInterceptor(localeChangeInterceptor);
+			//프로모션 상품에 대한 판촉코드 인터셉터 추가
+			//경로를 명시하여 인터셉트가 적용되야하는 url형태 지정
+			registry.addInterceptor(promoCodeInterceptor())
+			.addPathPatterns("/**/market/products/specialOffer");
+			//“market/products/specialOffer”으로 끝나는 모든 요청에 대해 인터셉터를 호출
+		}
+	
+	@Bean
+	public HandlerInterceptor promoCodeInterceptor() {
+		PromoCodeInterceptor promoCodeInterceptor = new PromoCodeInterceptor();
+		promoCodeInterceptor.setPromoCode("OFF3R");//판촉코드 초기화
+		promoCodeInterceptor.setOfferRedirect("market/products");//정상적인 경로(제품목록 페이지로 이동)
+		promoCodeInterceptor.setErrorRedirect("invalidPromoCode");//비정상적인 경로(뷰페이지 반환)
+		return promoCodeInterceptor;
 	}
 	
 }

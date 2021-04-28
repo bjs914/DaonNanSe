@@ -28,14 +28,14 @@
 		</div>
 	</section>
 	<section class="container">
-		<a href="/210408_shoppingmall">홈으로</a>
+		<a href="/210408_shoppingmall"><spring:message code="home.label"/></a>
 		<hr>
 	</section>
 	<section class="container">
 		<form:form method="POST" modelAttribute="newProduct"
 			class="form-horizontal" enctype="multipart/form-data">	<!-- enctype 이미지추가 관련 -->
 			<fieldset>
-				<legend>신상품 정보 입력</legend>
+				<legend><spring:message code="product.form.productInfo.label" /></legend>
 				<div class="form-group">
 					<!-- <label class="control-label col-lg-2 col-lg-2" for="productId">
 						상품 ID </label> -->
